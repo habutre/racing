@@ -21,8 +21,9 @@ defmodule Racing.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:credo, "~> 1.1.2"},
       {:csv, "~> 2.3.1"},
-      {:credo, "~> 1.1.2"}
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false}
     ]
   end
 end

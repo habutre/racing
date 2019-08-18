@@ -20,9 +20,10 @@ defmodule Racing.Domain.LapTest do
     end
 
     test "log_line should be translated to a Lap struct" do
-      line = ["23:49:08.277", "038", "F.MASSA","1", "1:02.852","44,275"]
+      line = ["23:49:08.277", "038", "F.MASSA", "1", "1:02.852", "44,275"]
 
       lap = Lap.build_lap(line)
+
       expected_lap = %Lap{
         start_time: ~T[23:49:08.277],
         pilot_id: "038",

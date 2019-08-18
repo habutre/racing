@@ -1,4 +1,5 @@
 defmodule Racing.Domain.Lap do
+  alias __MODULE__
   defstruct [:start_time, :pilot_id, :pilot_name, :number, :timing, :speed_avg]
 
   @type t :: %__MODULE__{
@@ -10,16 +11,13 @@ defmodule Racing.Domain.Lap do
           speed_avg: float()
         }
 
-  @spec(build_lap(List.t()) :: Lap.t() | {:error, String.t()})
   def build_lap([] = _log_line), do: %__MODULE__{}
-
-  @spec(build_lap(List.t()) :: Lap.t() | {:error, String.t()})
   def build_lap(log_line) when is_nil(log_line), do: %__MODULE__{}
 
-  @spec(build_lap(List.t()) :: Lap.t() | {:error, String.t()})
-  def build_lap(log_line) when length(log_line) < 6, do: {:error, "The line #{log_line} is missing columns or corrupted"}
+  def build_lap(log_line) when length(log_line) < 6,
+    do: {:error, "The line #{log_line} is missing columns or corrupted"}
 
-  @spec(build_lap(List.t()) :: Lap.t() | {:error, String.t()})
+  @spec build_lap(list()) :: Lap.t() | {:error, String.t()}
   def build_lap(log_line) do
     {start_time, pilot_id, pilot_name, number, timing, speed_avg} = List.to_tuple(log_line)
 

@@ -13,17 +13,17 @@ defmodule Racing.Domain.Race do
 
   @spec build_race(Lap.t(), map()) :: %{required(String.t()) => Race.t()}
   def build_race(lap, race \\ %{}) do
-    Logger.debug("Building race from available laps")
     aggregate(lap, race)
   end
 
-  @spec build_ranking(Race.t()) :: list({String.t(), Race.t()})
+  @spec build_ranking(map()) :: list({String.t(), Race.t()})
   def build_ranking(race) do
-    Logger.debug("Building Race ranking")
+    Logger.debug("Building Race ranking #{Map.keys(race)}")
+
     race
     |> Enum.sort(fn {_k1, v1}, {_k2, v2} ->
-      v1.completed_laps > v2.completed_laps and
-        Time.compare(v1.total_timing, v2.total_timing) == :gt
+      v1.completed_laps >= v2.completed_laps and
+        Time.compare(v1.total_timing, v2.total_timing) == :lt
     end)
     |> Stream.transform(1, fn item, acc ->
       {key, value} = item
@@ -37,6 +37,8 @@ defmodule Racing.Domain.Race do
   defp aggregate(lap, race) when map_size(lap) == 0, do: race
 
   defp aggregate(lap, race) when map_size(race) == 0 do
+    Logger.debug("Building race from lap: #{lap.number}|#{lap.pilot_id}")
+
     %{
       lap.pilot_id => %Race{
         position: 1,
@@ -49,6 +51,8 @@ defmodule Racing.Domain.Race do
   end
 
   defp aggregate(lap, race) when is_nil(race) do
+    Logger.debug("Building race from lap: #{lap.number}|#{lap.pilot_id}")
+
     %{
       lap.pilot_id => %Race{
         position: 1,
@@ -61,6 +65,8 @@ defmodule Racing.Domain.Race do
   end
 
   defp aggregate(lap, race) do
+    Logger.debug("Building race from lap: #{lap.number}|#{lap.pilot_id}")
+
     race_aggregated =
       case Map.get(race, lap.pilot_id) do
         nil ->

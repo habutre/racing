@@ -16,12 +16,16 @@ defmodule Racing do
       "|Posição Chegada | Código Piloto |  Nome Piloto | Qtde Voltas Completadas |  Tempo Total de Prova |"
     )
 
-    Enum.each(ranking, fn {pilot_id, pilot} ->
+    Enum.each(ranking, fn {_pilot_id, pilot} ->
       IO.puts(
         "#{pilot.position} | #{pilot.pilot_id} | #{String.pad_trailing(pilot.pilot_name, 15, " ")} | #{
           pilot.completed_laps
         } | #{pilot.total_timing} |"
       )
     end)
+  end
+
+  def main(_args) do
+    process_race("/app/racing.log")
   end
 end

@@ -4,7 +4,6 @@ defmodule Racing.Infrastructure.LogReader do
 
   def read(filename) do
     filename
-    |> Path.expand(__DIR__)
     |> File.stream!()
     |> Stream.map(fn line -> cleanup(line) end)
     |> CSV.decode!(separator: ?;, header: true, validate_row_length: false, strip_fields: true)

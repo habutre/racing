@@ -1,7 +1,15 @@
 # lib/racing/infrastructure/log_reader.ex
 defmodule Racing.Infrastructure.LogReader do
-  alias __MODULE__
 
+  @moduledoc """
+    Process racing logs while cleaning data
+  """
+
+  @doc """
+    Reads a file based on filename (full path) informed
+
+    Returns a list of cleaned lap data
+  """
   def read(filename) do
     filename
     |> File.stream!()

@@ -3,6 +3,12 @@ defmodule Racing.Domain.Race do
   alias Racing.Domain.{Lap, Race}
   defstruct [:position, :pilot_id, :pilot_name, :completed_laps, :total_timing]
 
+  @moduledoc """
+    Represents a Race information by its struct
+
+    Use Laps to build a Race ranking the pilots
+  """
+
   @type t :: %__MODULE__{
           position: integer(),
           pilot_id: String.t(),
@@ -11,11 +17,23 @@ defmodule Racing.Domain.Race do
           total_timing: Time.t()
         }
 
+  @doc """
+  Builds a race using the lap informed accumulating
+  laps on a new map() when anyone is informed or appending
+  on a existent one
+
+  Returns a map() of Races identified by pilot's ID
+  """
   @spec build_race(Lap.t(), map()) :: %{required(String.t()) => Race.t()}
   def build_race(lap, race \\ %{}) do
     aggregate(lap, race)
   end
 
+  @doc """
+    Assembly a ranking when all laps were processed
+
+    Returns a ranked Race by laps completed and smaller timing
+  """
   @spec build_ranking(map()) :: list({String.t(), Race.t()})
   def build_ranking(race) do
     Logger.debug("Building Race ranking #{Map.keys(race)}")

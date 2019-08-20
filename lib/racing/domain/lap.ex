@@ -2,6 +2,12 @@ defmodule Racing.Domain.Lap do
   alias __MODULE__
   defstruct [:start_time, :pilot_id, :pilot_name, :number, :timing, :speed_avg]
 
+  @moduledoc """
+    Represents a Lap information by its struct
+
+    Build a lap based on racing log containing pilot and lap infos
+  """
+
   @type t :: %__MODULE__{
           start_time: DateTime.t(),
           pilot_id: String.t(),
@@ -17,6 +23,11 @@ defmodule Racing.Domain.Lap do
   def build_lap(log_line) when length(log_line) < 6,
     do: {:error, "The line #{log_line} is missing columns or corrupted"}
 
+  @doc """
+    Build a lap based on a List.t() of parsed fields from racing log
+
+    Returns a Lap.t()
+  """
   @spec build_lap(list()) :: Lap.t() | {:error, String.t()}
   def build_lap(log_line) do
     {start_time, pilot_id, pilot_name, number, timing, speed_avg} = List.to_tuple(log_line)

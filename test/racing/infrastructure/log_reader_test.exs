@@ -8,7 +8,7 @@ defmodule Racing.Infrastructure.LogReaderTest do
       line1 = ["23:49:08.277", "038", "F.MASSA", "1", "1:02.852", "44,275"]
       line2 = ["23:49:10.858", "033", "R.BARRICHELLO", "1", "1:04.352", "43,243"]
 
-      content = LogReader.read("../../../test/support/racing_sample.log")
+      content = LogReader.read(Path.expand(Path.absname("test/support/racing_sample.log")))
 
       assert is_list(content)
       assert List.first(content) == line1

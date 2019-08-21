@@ -1,7 +1,16 @@
 defmodule Racing.Domain.Race do
   require Logger
   alias Racing.Domain.{Lap, Race}
-  defstruct [:position, :pilot_id, :pilot_name, :completed_laps, :total_timing]
+
+  defstruct [
+    :position,
+    :pilot_id,
+    :pilot_name,
+    :completed_laps,
+    :total_timing,
+    :best_lap,
+    :speed_avg
+  ]
 
   @moduledoc """
     Represents a Race information by its struct
@@ -14,7 +23,9 @@ defmodule Racing.Domain.Race do
           pilot_id: String.t(),
           pilot_name: String.t(),
           completed_laps: integer(),
-          total_timing: Time.t()
+          total_timing: Time.t(),
+          best_lap: Time.t(),
+          speed_avg: float()
         }
 
   @doc """
@@ -93,7 +104,9 @@ defmodule Racing.Domain.Race do
             pilot_id: lap.pilot_id,
             pilot_name: lap.pilot_name,
             completed_laps: lap.number,
-            total_timing: lap.timing
+            total_timing: lap.timing,
+            best_lap: lap.timing,
+            speed_avg: lap.speed_avg
           })
 
         _ ->
@@ -101,7 +114,9 @@ defmodule Racing.Domain.Race do
             %{
               pilot_race
               | completed_laps: lap.number,
-                total_timing: sum_time(pilot_race.total_timing, lap.timing)
+                total_timing: sum_time(pilot_race.total_timing, lap.timing),
+                best_lap: get_best_lap(pilot_race.best_lap, lap.timing),
+                speed_avg: total_speed_avg(pilot_race.speed_avg, lap.speed_avg, lap.number)
             }
           end)
       end
@@ -121,5 +136,22 @@ defmodule Racing.Domain.Race do
     cur_time
     |> Time.add(seconds_from_lap, :second)
     |> Time.add(microsends_from_lap, :microsecond)
+  end
+
+  defp get_best_lap(last_best_lap, cur_lap_timing) do
+    cond do
+      is_nil(last_best_lap) ->
+        cur_lap_timing
+
+      Time.compare(last_best_lap, cur_lap_timing) == :lt ->
+        last_best_lap
+
+      true ->
+        cur_lap_timing
+    end
+  end
+
+  defp total_speed_avg(speed_avg, lap_speed_avg, lap_number) do
+    if is_nil(speed_avg), do: lap_speed_avg, else: (speed_avg + lap_speed_avg) / lap_number
   end
 end

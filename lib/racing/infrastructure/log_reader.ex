@@ -1,6 +1,5 @@
 # lib/racing/infrastructure/log_reader.ex
 defmodule Racing.Infrastructure.LogReader do
-
   @moduledoc """
     Process racing logs while cleaning data
   """
